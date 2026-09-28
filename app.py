@@ -80,18 +80,32 @@ def test_db():
 def search_doctors():
 
     name = request.args.get("name", "").strip()
+
     registration_number = request.args.get(
         "registration_number", ""
     ).strip()
+
     specialization = request.args.get(
         "specialization", ""
     ).strip()
-    location = request.args.get("location", "").strip()
+
+    location = request.args.get(
+        "location", ""
+    ).strip()
+
+    availability = request.args.get(
+        "availability", ""
+    ).strip()
+
+    verification_status = request.args.get(
+        "verification_status", ""
+    ).strip()
 
     connection = None
     cursor = None
 
     try:
+
         connection = get_db_connection()
 
         cursor = connection.cursor(dictionary=True)
@@ -117,24 +131,59 @@ def search_doctors():
         parameters = []
 
         if name:
+
             query += " AND doctor_name LIKE %s"
-            parameters.append(f"%{name}%")
+
+            parameters.append(
+                f"%{name}%"
+            )
 
         if registration_number:
+
             query += " AND registration_number LIKE %s"
-            parameters.append(f"%{registration_number}%")
+
+            parameters.append(
+                f"%{registration_number}%"
+            )
 
         if specialization:
+
             query += " AND specialization LIKE %s"
-            parameters.append(f"%{specialization}%")
+
+            parameters.append(
+                f"%{specialization}%"
+            )
 
         if location:
+
             query += " AND location LIKE %s"
-            parameters.append(f"%{location}%")
+
+            parameters.append(
+                f"%{location}%"
+            )
+
+        if availability:
+
+            query += " AND availability = %s"
+
+            parameters.append(
+                availability
+            )
+
+        if verification_status:
+
+            query += " AND verification_status = %s"
+
+            parameters.append(
+                verification_status
+            )
 
         query += " ORDER BY doctor_name ASC"
 
-        cursor.execute(query, parameters)
+        cursor.execute(
+            query,
+            parameters
+        )
 
         doctors = cursor.fetchall()
 
@@ -144,7 +193,9 @@ def search_doctors():
             name=name,
             registration_number=registration_number,
             specialization=specialization,
-            location=location
+            location=location,
+            availability=availability,
+            verification_status=verification_status
         )
 
     except Exception as e:
@@ -763,9 +814,216 @@ def admin_dashboard():
     if session.get("role") != "ADMIN":
         return redirect(url_for("dashboard"))
 
-    return render_template(
-        "admin_dashboard.html"
-    )
+    connection = None
+    cursor = None
+
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        # Total doctors
+        cursor.execute(
+            """
+            SELECT COUNT(*) AS total
+            FROM doctors
+            """
+        )
+        total_doctors = cursor.fetchone()["total"]
+
+        # Verified doctors
+        cursor.execute(
+            """
+            SELECT COUNT(*) AS total
+            FROM doctors
+            WHERE verification_status = 'VERIFIED'
+            """
+        )
+        verified_doctors = cursor.fetchone()["total"]
+
+        # Doctors needing data update
+        cursor.execute(
+            """
+            SELECT COUNT(*) AS total
+            FROM doctors
+            WHERE verification_status = 'DATA NEEDS UPDATE'
+            """
+        )
+        update_doctors = cursor.fetchone()["total"]
+
+        # Total verification logs
+        cursor.execute(
+            """
+            SELECT COUNT(*) AS total
+            FROM verification_logs
+            """
+        )
+        total_verifications = cursor.fetchone()["total"]
+
+        return render_template(
+            "admin_dashboard.html",
+            total_doctors=total_doctors,
+            verified_doctors=verified_doctors,
+            update_doctors=update_doctors,
+            total_verifications=total_verifications
+        )
+
+    except Exception as e:
+        return f"Error loading admin dashboard: {e}"
+
+    finally:
+
+        if cursor:
+            cursor.close()
+
+        if connection:
+            connection.close()
+
+@app.route("/admin/verification-logs")
+def verification_logs():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    if session.get("role") != "ADMIN":
+        return redirect(url_for("dashboard"))
+
+    connection = None
+    cursor = None
+
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        cursor.execute(
+            """
+            SELECT
+                vl.id,
+                vl.doctor_id,
+                d.doctor_name,
+                d.registration_number,
+                vl.checked_at,
+                vl.result,
+                vl.source,
+                vl.remarks
+            FROM verification_logs vl
+            JOIN doctors d
+                ON vl.doctor_id = d.id
+            ORDER BY vl.id DESC
+            """
+        )
+
+        logs = cursor.fetchall()
+
+        return render_template(
+            "verification_logs.html",
+            logs=logs
+        )
+
+    except Exception as e:
+        return f"Error loading verification logs: {e}"
+
+    finally:
+        if cursor:
+            cursor.close()
+
+        if connection:
+            connection.close()
+
+@app.route("/admin/verification-records")
+def verification_records():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    if session.get("role") != "ADMIN":
+        return redirect(url_for("dashboard"))
+
+    connection = None
+    cursor = None
+
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        cursor.execute(
+            """
+            SELECT
+                id,
+                doctor_name,
+                registration_number,
+                registration_authority,
+                qualification,
+                specialization,
+                location,
+                registration_status,
+                verification_status,
+                verification_source,
+                verification_date,
+                availability
+            FROM doctors
+            ORDER BY id DESC
+            """
+        )
+
+        doctors = cursor.fetchall()
+
+        return render_template(
+            "verification_records.html",
+            doctors=doctors
+        )
+
+    except Exception as e:
+        return f"Error loading verification records: {e}"
+
+    finally:
+        if cursor:
+            cursor.close()
+
+        if connection:
+            connection.close()    
+
+@app.route("/admin/users")
+def manage_users():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    if session.get("role") != "ADMIN":
+        return redirect(url_for("dashboard"))
+
+    connection = None
+    cursor = None
+
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        cursor.execute(
+            """
+            SELECT
+                id,
+                name,
+                email,
+                role,
+                created_at
+            FROM users
+            ORDER BY id DESC
+            """
+        )
+
+        users = cursor.fetchall()
+
+        return render_template(
+            "manage_users.html",
+            users=users
+        )
+
+    except Exception as e:
+        return f"Error loading users: {e}"
+
+    finally:
+        if cursor:
+            cursor.close()
+
+        if connection:
+            connection.close()                    
 
 @app.route("/admin/add-doctor", methods=["GET", "POST"])
 def add_doctor():

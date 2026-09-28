@@ -78,13 +78,16 @@
             gap: 15px;
         }
 
-        input {
-            width: 100%;
-            padding: 14px;
-            border: 1px solid #d5dde5;
-            border-radius: 8px;
-            font-size: 15px;
-        }
+       input,
+select {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #d5dde5;
+    border-radius: 8px;
+    font-size: 15px;
+    background: white;
+    color: #172033;
+}
 
         button {
             margin-top: 20px;
@@ -164,34 +167,70 @@
 
         <form action="/search" method="GET">
 
-            <div class="search-grid">
+           <div class="search-grid">
 
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="Doctor Name"
-                >
+    <input 
+        type="text" 
+        name="name" 
+        placeholder="Doctor Name" 
+    >
 
-                <input
-                    type="text"
-                    name="registration_number"
-                    placeholder="Registration Number"
-                >
+    <input 
+        type="text" 
+        name="registration_number" 
+        placeholder="Registration Number" 
+    >
 
-                <input
-                    type="text"
-                    name="specialization"
-                    placeholder="Specialization"
-                >
+    <input 
+        type="text" 
+        name="specialization" 
+        placeholder="Specialization" 
+    >
 
-                <input
-                    type="text"
-                    name="location"
-                    placeholder="Location"
-                >
+    <input 
+        type="text" 
+        name="location" 
+        placeholder="Location" 
+    >
 
-            </div>
+    <select name="availability">
 
+        <option value="">
+            Any Availability
+        </option>
+
+        <option value="Available">
+            Available
+        </option>
+
+        <option value="Unavailable">
+            Unavailable
+        </option>
+
+    </select>
+
+
+    <select name="verification_status">
+
+        <option value="">
+            Any Verification Status
+        </option>
+
+        <option value="VERIFIED">
+            VERIFIED
+        </option>
+
+        <option value="DATA NEEDS UPDATE">
+            DATA NEEDS UPDATE
+        </option>
+
+        <option value="UNABLE TO VERIFY">
+            UNABLE TO VERIFY
+        </option>
+
+    </select>
+
+</div>
 
             <button type="submit">
                 🔍 Search Doctor

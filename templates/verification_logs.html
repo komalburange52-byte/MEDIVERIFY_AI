@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Verification Logs | MediVerify AI</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #172033;
+        }
+
+        .navbar {
+            background: #172033;
+            color: white;
+            padding: 18px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            margin: 0;
+        }
+
+        .back-btn {
+            color: white;
+            text-decoration: none;
+            background: #344563;
+            padding: 10px 16px;
+            border-radius: 6px;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1400px;
+            margin: 35px auto;
+        }
+
+        .header {
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #667085;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1000px;
+        }
+
+        th {
+            background: #172033;
+            color: white;
+            padding: 14px;
+            text-align: left;
+        }
+
+        td {
+            padding: 14px;
+            border-bottom: 1px solid #e5e7eb;
+            vertical-align: top;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .verified {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .unable {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .update {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #667085;
+        }
+
+        .remarks {
+            max-width: 350px;
+            line-height: 1.5;
+        }
+
+        .source {
+            color: #475467;
+        }
+
+        .date {
+            white-space: nowrap;
+            color: #475467;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+        <h2>MediVerify AI</h2>
+
+        <a href="{{ url_for('admin_dashboard') }}" class="back-btn">
+            ← Admin Dashboard
+        </a>
+    </div>
+
+    <div class="container">
+
+        <div class="header">
+            <h1>Verification Logs</h1>
+            <p>
+                View the history of doctor verification checks performed by the system.
+            </p>
+        </div>
+
+        <div class="table-container">
+
+            {% if logs %}
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Doctor</th>
+                        <th>Registration Number</th>
+                        <th>Status</th>
+                        <th>Source</th>
+                        <th>Checked At</th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for log in logs %}
+
+                    <tr>
+
+                        <td>
+                            {{ log.id }}
+                        </td>
+
+                        <td>
+                            <strong>{{ log.doctor_name }}</strong>
+                        </td>
+
+                        <td>
+                            {{ log.registration_number }}
+                        </td>
+
+                        <td>
+
+                            {% if log.result == "VERIFIED" %}
+
+                                <span class="status verified">
+                                    VERIFIED
+                                </span>
+
+                            {% elif log.result == "UNABLE TO VERIFY" %}
+
+                                <span class="status unable">
+                                    UNABLE TO VERIFY
+                                </span>
+
+                            {% else %}
+
+                                <span class="status update">
+                                    DATA NEEDS UPDATE
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td class="source">
+                            {{ log.source }}
+                        </td>
+
+                        <td class="date">
+                            {{ log.checked_at }}
+                        </td>
+
+                        <td class="remarks">
+                            {{ log.remarks }}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+                <div class="empty">
+                    <h3>No verification logs found</h3>
+                    <p>
+                        Verification records will appear here after a doctor is verified.
+                    </p>
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</body>
+</html>

@@ -157,6 +157,66 @@
         </div>
 
         <div class="cards">
+            <!-- Dashboard Statistics -->
+
+<div class="card">
+
+    <h3>👨‍⚕️ Total Doctors</h3>
+
+    <p>
+        Total doctor records in the system.
+    </p>
+
+    <h2>
+        {{ total_doctors }}
+    </h2>
+
+</div>
+
+
+<div class="card">
+
+    <h3>✅ Verified Doctors</h3>
+
+    <p>
+        Doctors currently marked as verified.
+    </p>
+
+    <h2>
+        {{ verified_doctors }}
+    </h2>
+
+</div>
+
+
+<div class="card">
+
+    <h3>⚠️ Data Needs Update</h3>
+
+    <p>
+        Doctor records requiring data updates.
+    </p>
+
+    <h2>
+        {{ update_doctors }}
+    </h2>
+
+</div>
+
+
+<div class="card">
+
+    <h3>📋 Verification Checks</h3>
+
+    <p>
+        Total verification attempts recorded.
+    </p>
+
+    <h2>
+        {{ total_verifications }}
+    </h2>
+
+</div>
 
             <div class="card">
 
@@ -181,9 +241,9 @@
                     results and registration records.
                 </p>
 
-                <a href="#">
-                    View Records
-                </a>
+                <a href="{{ url_for('verification_records') }}">
+    View Records
+</a>
 
             </div>
 
@@ -196,10 +256,9 @@
                     performed by the system.
                 </p>
 
-                <a href="#">
-                    View Logs
-                </a>
-
+                <a href="{{ url_for('verification_logs') }}">
+    View Logs
+</a>
             </div>
 
             <div class="card">
@@ -211,10 +270,9 @@
                     system roles.
                 </p>
 
-                <a href="#">
-                    Manage Users
-                </a>
-
+                <a href="{{ url_for('manage_users') }}">
+    Manage Users
+</a>
             </div>
 
         </div>

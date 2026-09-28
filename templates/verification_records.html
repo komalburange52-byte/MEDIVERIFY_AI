@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Verification Records | MediVerify AI</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #172033;
+        }
+
+        .navbar {
+            background: #172033;
+            color: white;
+            padding: 18px 40px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            margin: 0;
+        }
+
+        .back-btn {
+            color: white;
+            text-decoration: none;
+            background: #344563;
+            padding: 10px 16px;
+            border-radius: 6px;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1450px;
+            margin: 35px auto;
+        }
+
+        .header {
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #667085;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1200px;
+        }
+
+        th {
+            background: #172033;
+            color: white;
+            padding: 14px;
+            text-align: left;
+        }
+
+        td {
+            padding: 13px;
+            border-bottom: 1px solid #e5e7eb;
+            vertical-align: top;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        .status {
+            display: inline-block;
+
+            padding: 6px 10px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+            white-space: nowrap;
+        }
+
+        .verified {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .unable {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .update {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .active {
+            color: #166534;
+            font-weight: bold;
+        }
+
+        .inactive {
+            color: #991b1b;
+            font-weight: bold;
+        }
+
+        .date {
+            white-space: nowrap;
+            color: #475467;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #667085;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="navbar">
+
+        <h2>
+            MediVerify AI — Admin
+        </h2>
+
+        <a
+            href="{{ url_for('admin_dashboard') }}"
+            class="back-btn"
+        >
+            ← Admin Dashboard
+        </a>
+
+    </div>
+
+
+    <div class="container">
+
+        <div class="header">
+
+            <h1>
+                Verification Records
+            </h1>
+
+            <p>
+                View the current verification status and registration
+                information of doctors in the system.
+            </p>
+
+        </div>
+
+
+        <div class="table-container">
+
+            {% if doctors %}
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Doctor</th>
+
+                        <th>Registration Number</th>
+
+                        <th>Authority</th>
+
+                        <th>Specialization</th>
+
+                        <th>Location</th>
+
+                        <th>Registration Status</th>
+
+                        <th>Verification Status</th>
+
+                        <th>Source</th>
+
+                        <th>Verification Date</th>
+
+                        <th>Availability</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for doctor in doctors %}
+
+                    <tr>
+
+                        <td>
+                            {{ doctor.id }}
+                        </td>
+
+
+                        <td>
+
+                            <strong>
+                                {{ doctor.doctor_name }}
+                            </strong>
+
+                            <br>
+
+                            {{ doctor.qualification }}
+
+                        </td>
+
+
+                        <td>
+                            {{ doctor.registration_number }}
+                        </td>
+
+
+                        <td>
+                            {{ doctor.registration_authority }}
+                        </td>
+
+
+                        <td>
+                            {{ doctor.specialization }}
+                        </td>
+
+
+                        <td>
+                            {{ doctor.location }}
+                        </td>
+
+
+                        <td>
+
+                            {% if doctor.registration_status == "ACTIVE" %}
+
+                                <span class="active">
+                                    ACTIVE
+                                </span>
+
+                            {% else %}
+
+                                <span class="inactive">
+                                    {{ doctor.registration_status }}
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            {% if doctor.verification_status == "VERIFIED" %}
+
+                                <span class="status verified">
+                                    VERIFIED
+                                </span>
+
+                            {% elif doctor.verification_status == "UNABLE TO VERIFY" %}
+
+                                <span class="status unable">
+                                    UNABLE TO VERIFY
+                                </span>
+
+                            {% else %}
+
+                                <span class="status update">
+                                    DATA NEEDS UPDATE
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+                            {{ doctor.verification_source }}
+                        </td>
+
+
+                        <td class="date">
+                            {{ doctor.verification_date }}
+                        </td>
+
+
+                        <td>
+                            {{ doctor.availability }}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+            <div class="empty">
+
+                <h3>
+                    No verification records found
+                </h3>
+
+                <p>
+                    Doctor verification records will appear here.
+                </p>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

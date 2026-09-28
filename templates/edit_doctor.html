@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Edit Doctor | MEDIVERIFY AI</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+            min-height: 100vh;
+        }
+
+        nav {
+            background: #1e293b;
+            color: white;
+            padding: 18px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav h2 {
+            margin: 0;
+        }
+
+        .back {
+            color: white;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .form-card {
+            background: white;
+            padding: 35px;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            background: #4f46e5;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #4338ca;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .success {
+            background: #dcfce7;
+            color: #166534;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 600px) {
+
+            .row {
+                grid-template-columns: 1fr;
+            }
+
+            nav {
+                padding: 15px 20px;
+            }
+
+            .form-card {
+                padding: 25px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <nav>
+
+        <h2>
+            MEDIVERIFY AI — Admin
+        </h2>
+
+        <a
+            href="{{ url_for('manage_doctors') }}"
+            class="back"
+        >
+            ← Manage Doctors
+        </a>
+
+    </nav>
+
+    <div class="container">
+
+        <div class="form-card">
+
+            <h1>
+                Edit Doctor
+            </h1>
+
+            <p class="subtitle">
+                Update doctor registration information.
+            </p>
+
+            {% if error %}
+
+                <div class="error">
+                    {{ error }}
+                </div>
+
+            {% endif %}
+
+            {% if success %}
+
+                <div class="success">
+                    {{ success }}
+                </div>
+
+            {% endif %}
+
+            <form method="POST">
+
+                <div class="form-group">
+
+                    <label>
+                        Doctor Name
+                    </label>
+
+                    <input
+                        type="text"
+                        name="doctor_name"
+                        value="{{ doctor.doctor_name }}"
+                        required
+                    >
+
+                </div>
+
+                <div class="row">
+
+                    <div class="form-group">
+
+                        <label>
+                            Registration Number
+                        </label>
+
+                        <input
+                            type="text"
+                            name="registration_number"
+                            value="{{ doctor.registration_number }}"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>
+                            Registration Authority
+                        </label>
+
+                        <input
+                            type="text"
+                            name="registration_authority"
+                            value="{{ doctor.registration_authority }}"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="form-group">
+
+                        <label>
+                            Qualification
+                        </label>
+
+                        <input
+                            type="text"
+                            name="qualification"
+                            value="{{ doctor.qualification or '' }}"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>
+                            Specialization
+                        </label>
+
+                        <input
+                            type="text"
+                            name="specialization"
+                            value="{{ doctor.specialization or '' }}"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="form-group">
+
+                        <label>
+                            Location
+                        </label>
+
+                        <input
+                            type="text"
+                            name="location"
+                            value="{{ doctor.location or '' }}"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>
+                            Availability
+                        </label>
+
+                        <select
+                            name="availability"
+                            required
+                        >
+
+                            <option
+                                value="Available"
+                                {% if doctor.availability == "Available" %}
+                                selected
+                                {% endif %}
+                            >
+                                Available
+                            </option>
+
+                            <option
+                                value="Not Available"
+                                {% if doctor.availability == "Not Available" %}
+                                selected
+                                {% endif %}
+                            >
+                                Not Available
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+                        Registration Status
+                    </label>
+
+                    <select
+                        name="registration_status"
+                        required
+                    >
+
+                        <option
+                            value="ACTIVE"
+                            {% if doctor.registration_status == "ACTIVE" %}
+                            selected
+                            {% endif %}
+                        >
+                            ACTIVE
+                        </option>
+
+                        <option
+                            value="INACTIVE"
+                            {% if doctor.registration_status == "INACTIVE" %}
+                            selected
+                            {% endif %}
+                        >
+                            INACTIVE
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <button type="submit">
+                    Update Doctor
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

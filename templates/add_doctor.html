@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Add Doctor | MEDIVERIFY AI</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        nav {
+            background: #1e293b;
+            color: white;
+            padding: 18px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav h2 {
+            margin: 0;
+        }
+
+        .back {
+            color: white;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .form-card {
+            background: white;
+            padding: 35px;
+            border-radius: 16px;
+            box-shadow:
+                0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+            color: #334155;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #4f46e5;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            background: #4f46e5;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #4338ca;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .success {
+            background: #dcfce7;
+            color: #166534;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 600px) {
+
+            .row {
+                grid-template-columns: 1fr;
+            }
+
+            nav {
+                padding: 15px 20px;
+            }
+
+            .form-card {
+                padding: 25px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <nav>
+
+        <h2>
+            MEDIVERIFY AI
+        </h2>
+
+        <a
+            href="{{ url_for('admin_dashboard') }}"
+            class="back"
+        >
+            ← Admin Dashboard
+        </a>
+
+    </nav>
+
+    <div class="container">
+
+        <div class="form-card">
+
+            <h1>
+                Add Doctor
+            </h1>
+
+            <p class="subtitle">
+                Add a doctor to the controlled
+                demonstration registry.
+            </p>
+
+            {% if error %}
+
+                <div class="error">
+                    {{ error }}
+                </div>
+
+            {% endif %}
+
+            {% if success %}
+
+                <div class="success">
+                    {{ success }}
+                </div>
+
+            {% endif %}
+
+            <form method="POST">
+
+                <div class="form-group">
+
+                    <label for="doctor_name">
+                        Doctor Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="doctor_name"
+                        name="doctor_name"
+                        placeholder="Dr. Example Name"
+                        required
+                    >
+
+                </div>
+
+                <div class="row">
+
+                    <div class="form-group">
+
+                        <label for="registration_number">
+                            Registration Number
+                        </label>
+
+                        <input
+                            type="text"
+                            id="registration_number"
+                            name="registration_number"
+                            placeholder="REG-12345"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="registration_authority">
+                            Registration Authority
+                        </label>
+
+                        <input
+                            type="text"
+                            id="registration_authority"
+                            name="registration_authority"
+                            placeholder="Example Medical Council"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="form-group">
+
+                        <label for="qualification">
+                            Qualification
+                        </label>
+
+                        <input
+                            type="text"
+                            id="qualification"
+                            name="qualification"
+                            placeholder="MBBS, MD"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="specialization">
+                            Specialization
+                        </label>
+
+                        <input
+                            type="text"
+                            id="specialization"
+                            name="specialization"
+                            placeholder="Cardiology"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="form-group">
+
+                        <label for="location">
+                            Location
+                        </label>
+
+                        <input
+                            type="text"
+                            id="location"
+                            name="location"
+                            placeholder="Pune"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="availability">
+                            Availability
+                        </label>
+
+                        <select
+                            id="availability"
+                            name="availability"
+                            required
+                        >
+
+                            <option value="">
+                                Select availability
+                            </option>
+
+                            <option value="Available">
+                                Available
+                            </option>
+
+                            <option value="Not Available">
+                                Not Available
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="registration_status">
+                        Registration Status
+                    </label>
+
+                    <select
+                        id="registration_status"
+                        name="registration_status"
+                        required
+                    >
+
+                        <option value="">
+                            Select registration status
+                        </option>
+
+                        <option value="ACTIVE">
+                            ACTIVE
+                        </option>
+
+                        <option value="INACTIVE">
+                            INACTIVE
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <button type="submit">
+                    Add Doctor
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

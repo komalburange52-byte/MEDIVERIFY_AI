@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Doctor Recommendations - MEDIVERIFY AI</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f8fb;
+            color: #172033;
+        }
+
+        nav {
+            background: white;
+            padding: 18px 8%;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        nav a {
+            color: #1266a8;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 45px auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            color: #123b56;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #687482;
+            margin-bottom: 25px;
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccd6df;
+            border-radius: 7px;
+        }
+
+        .full {
+            grid-column: 1 / -1;
+        }
+
+        button {
+            background: #1266a8;
+            color: white;
+            border: none;
+            padding: 13px 20px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .doctor {
+            background: #f8fafc;
+            border: 1px solid #e2e8ee;
+            border-radius: 12px;
+            padding: 22px;
+            margin-top: 18px;
+        }
+
+        .doctor h2 {
+            color: #123b56;
+            margin-bottom: 8px;
+        }
+
+        .verified {
+            display: inline-block;
+            background: #e4f7ec;
+            color: #168044;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .details {
+            line-height: 1.8;
+        }
+
+        .score {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #1266a8;
+        }
+
+        .explanation {
+            margin-top: 12px;
+            padding: 12px;
+            background: #eef6fb;
+            border-left: 4px solid #1266a8;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        .empty {
+            padding: 20px;
+            background: #fff8e8;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 650px) {
+
+            form {
+                grid-template-columns: 1fr;
+            }
+
+            .full {
+                grid-column: auto;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<nav>
+
+    <a href="/">
+        🩺 MEDIVERIFY AI
+    </a>
+
+</nav>
+
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>
+            🤖 Find a Suitable Doctor
+        </h1>
+
+        <p class="subtitle">
+            Recommendations are generated only from doctors
+            whose available credentials are currently VERIFIED.
+        </p>
+
+
+        <form method="POST">
+
+            <div>
+
+                <label>
+                    Specialization
+                </label>
+
+                <input
+                    type="text"
+                    name="specialization"
+                    placeholder="Example: Dermatology"
+                    value="{{ specialization or '' }}"
+                >
+
+            </div>
+
+
+            <div>
+
+                <label>
+                    Location
+                </label>
+
+                <input
+                    type="text"
+                    name="location"
+                    placeholder="Example: Pune"
+                    value="{{ location or '' }}"
+                >
+
+            </div>
+
+
+            <div class="full">
+
+                <label>
+                    Preference
+                </label>
+
+                <input
+                    type="text"
+                    name="preference"
+                    placeholder="Example: MBBS, nearby, cardiology"
+                    value="{{ preference or '' }}"
+                >
+
+            </div>
+
+
+            <div class="full">
+
+                <button type="submit">
+                    🔎 Get Recommendations
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    {% if recommendations %}
+
+        <div class="card">
+
+            <h1>
+                Recommended Verified Doctors
+            </h1>
+
+            <p class="subtitle">
+                Ranked using the transparent scoring system.
+            </p>
+
+
+            {% for doctor in recommendations %}
+
+                <div class="doctor">
+
+                    <div class="verified">
+                        ✓ VERIFIED
+                    </div>
+
+                    <h2>
+                        {{ doctor.doctor_name }}
+                    </h2>
+
+                    <div class="details">
+
+                        <strong>
+                            Specialization:
+                        </strong>
+                        {{ doctor.specialization }}
+
+                        <br>
+
+                        <strong>
+                            Location:
+                        </strong>
+                        {{ doctor.location }}
+
+                        <br>
+
+                        <strong>
+                            Qualification:
+                        </strong>
+                        {{ doctor.qualification }}
+
+                        <br>
+
+                        <strong>
+                            Registration:
+                        </strong>
+                        {{ doctor.registration_number }}
+
+                    </div>
+
+
+                    <div class="score">
+
+                        Recommendation Score:
+                        {{ doctor.recommendation_score }}/100
+
+                    </div>
+
+
+                    <div class="explanation">
+
+                        <strong>
+                            Why this doctor was recommended:
+                        </strong>
+
+                        <br>
+
+                        Specialization match:
+                        <strong>50%</strong>
+
+                        <br>
+
+                        Location match:
+                        <strong>25%</strong>
+
+                        <br>
+
+                        Availability:
+                        <strong>15%</strong>
+
+                        <br>
+
+                        User preference:
+                        <strong>10%</strong>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% elif searched %}
+
+        <div class="card">
+
+            <div class="empty">
+
+                No verified doctors matched the
+                requested criteria.
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+
+</html>

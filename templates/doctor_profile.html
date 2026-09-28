@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>{{ doctor.doctor_name }} - MEDIVERIFY AI</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f8fb;
+            color: #172033;
+        }
+
+        nav {
+            background: white;
+            padding: 18px 8%;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        nav a {
+            color: #1266a8;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        .profile {
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+        }
+
+        h1 {
+            color: #123b56;
+            margin-bottom: 10px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 15px 0 25px;
+        }
+
+        .verified {
+            background: #e4f7ec;
+            color: #168044;
+        }
+
+        .update {
+            background: #fff3d6;
+            color: #9a6800;
+        }
+
+        .unable {
+            background: #ffe5e5;
+            color: #b42318;
+        }
+
+        .info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .info-box {
+            background: #f7fafc;
+            padding: 16px;
+            border-radius: 8px;
+        }
+
+        .label {
+            font-size: 13px;
+            color: #687482;
+            margin-bottom: 5px;
+        }
+
+        .value {
+            font-weight: bold;
+            color: #1c3345;
+        }
+
+        .verify-button {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 13px 22px;
+            background: #1266a8;
+            color: white;
+            text-decoration: none;
+            border-radius: 7px;
+            font-weight: bold;
+        }
+
+        .verify-button:hover {
+            background: #0d4f82;
+        }
+
+        .notice {
+            margin-top: 25px;
+            padding: 15px;
+            background: #eef6fb;
+            border-left: 4px solid #1266a8;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 650px) {
+
+            .info {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<nav>
+
+    <a href="/search">
+        ← Back to Doctor Search
+    </a>
+
+</nav>
+
+
+<div class="container">
+
+    <div class="profile">
+
+        <h1>
+            {{ doctor.doctor_name }}
+        </h1>
+
+
+        {% if doctor.verification_status == "VERIFIED" %}
+
+            <span class="status verified">
+                ✓ VERIFIED
+            </span>
+
+        {% elif doctor.verification_status == "DATA NEEDS UPDATE" %}
+
+            <span class="status update">
+                ⚠ DATA NEEDS UPDATE
+            </span>
+
+        {% else %}
+
+            <span class="status unable">
+                ! UNABLE TO VERIFY
+            </span>
+
+        {% endif %}
+
+
+        <div class="info">
+
+            <div class="info-box">
+
+                <div class="label">
+                    Registration Number
+                </div>
+
+                <div class="value">
+                    {{ doctor.registration_number }}
+                </div>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <div class="label">
+                    Registration Authority
+                </div>
+
+                <div class="value">
+                    {{ doctor.registration_authority }}
+                </div>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <div class="label">
+                    Qualification
+                </div>
+
+                <div class="value">
+                    {{ doctor.qualification }}
+                </div>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <div class="label">
+                    Specialization
+                </div>
+
+                <div class="value">
+                    {{ doctor.specialization }}
+                </div>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <div class="label">
+                    Location
+                </div>
+
+                <div class="value">
+                    {{ doctor.location }}
+                </div>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <div class="label">
+                    Registration Status
+                </div>
+
+                <div class="value">
+                    {{ doctor.registration_status }}
+                </div>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <div class="label">
+                    Verification Source
+                </div>
+
+                <div class="value">
+                    {{ doctor.verification_source }}
+                </div>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <div class="label">
+                    Availability
+                </div>
+
+                <div class="value">
+                    {{ doctor.availability }}
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <a
+            href="/verify-doctor/{{ doctor.id }}"
+            class="verify-button"
+        >
+            🔍 Verify Registration
+        </a>
+
+        <a
+    href="/generate-qr/{{ doctor.id }}"
+    class="verify-button"
+    style="margin-left:10px;"
+>
+    📱 Generate QR
+</a>
+
+
+        <div class="notice">
+
+            <strong>Important:</strong>
+
+            MEDIVERIFY AI displays verification information
+            based on records available to the application.
+            This prototype does not legally determine whether
+            a person is a genuine or fake doctor.
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

@@ -75,28 +75,23 @@ def test_db():
             "error": str(e)
         }
 
-
 @app.route("/search")
 def search_doctors():
 
     name = request.args.get("name", "").strip()
-
     registration_number = request.args.get(
         "registration_number", ""
     ).strip()
-
     specialization = request.args.get(
         "specialization", ""
     ).strip()
-
     location = request.args.get(
         "location", ""
     ).strip()
-
     availability = request.args.get(
         "availability", ""
     ).strip()
-
+    
     verification_status = request.args.get(
         "verification_status", ""
     ).strip()
@@ -107,7 +102,6 @@ def search_doctors():
     try:
 
         connection = get_db_connection()
-
         cursor = connection.cursor(dictionary=True)
 
         query = """
@@ -130,55 +124,57 @@ def search_doctors():
 
         parameters = []
 
+        # Doctor name
         if name:
+            query += """
+                AND LOWER(doctor_name) LIKE %s
+            """
+            parameters.append("%" + name.lower() + "%")
 
-            query += " AND doctor_name LIKE %s"
-
-            parameters.append(
-                f"%{name}%"
-            )
-
+        # Registration number
         if registration_number:
-
-            query += " AND registration_number LIKE %s"
-
+            query += """
+                AND LOWER(registration_number) LIKE %s
+            """
             parameters.append(
-                f"%{registration_number}%"
+                "%" + registration_number.lower() + "%"
             )
 
+        # Specialization
         if specialization:
-
-            query += " AND specialization LIKE %s"
-
+            query += """
+                AND LOWER(specialization) LIKE %s
+            """
             parameters.append(
-                f"%{specialization}%"
+                "%" + specialization.lower() + "%"
             )
 
+        # Location
         if location:
-
-            query += " AND location LIKE %s"
-
+            query += """
+                AND LOWER(location) LIKE %s
+            """
             parameters.append(
-                f"%{location}%"
+                "%" + location.lower() + "%"
             )
 
+        # Availability
         if availability:
+            query += """
+                AND availability = %s
+            """
+            parameters.append(availability)
 
-            query += " AND availability = %s"
-
-            parameters.append(
-                availability
-            )
-
+        # Verification status
         if verification_status:
+            query += """
+                AND verification_status = %s
+            """
+            parameters.append(verification_status)
 
-            query += " AND verification_status = %s"
-
-            parameters.append(
-                verification_status
-            )
-
-        query += " ORDER BY doctor_name ASC"
+        query += """
+            ORDER BY doctor_name ASC
+        """
 
         cursor.execute(
             query,
@@ -212,8 +208,6 @@ def search_doctors():
 
         if connection:
             connection.close()
-
-
 @app.route("/doctor/<int:doctor_id>")
 def doctor_profile(doctor_id):
 
@@ -226,6 +220,7 @@ def doctor_profile(doctor_id):
 
         cursor = connection.cursor(dictionary=True)
 
+        # Get selected doctor
         cursor.execute(
             """
             SELECT
@@ -252,10 +247,52 @@ def doctor_profile(doctor_id):
         if doctor is None:
             return "Doctor not found", 404
 
+
+        # Get other verified doctors for recommendation
+        cursor.execute(
+            """
+            SELECT
+                id,
+                doctor_name,
+                registration_number,
+                registration_authority,
+                qualification,
+                specialization,
+                location,
+                registration_status,
+                verification_status,
+                verification_source,
+                verification_date,
+                availability
+            FROM doctors
+            WHERE verification_status = 'VERIFIED'
+              AND id != %s
+            """,
+            (doctor_id,)
+        )
+
+        doctors = cursor.fetchall()
+
+
+        # Generate recommendations
+        recommendations = recommend_doctors(
+            doctors=doctors,
+            specialization=doctor["specialization"],
+            location=doctor["location"],
+            preference=""
+        )
+
+
+        # Show only top 3 recommendations
+        recommendations = recommendations[:3]
+
+
         return render_template(
             "doctor_profile.html",
-            doctor=doctor
+            doctor=doctor,
+            recommendations=recommendations
         )
+
 
     except Exception as e:
 
@@ -263,6 +300,7 @@ def doctor_profile(doctor_id):
         <h2>Database Error</h2>
         <p>{e}</p>
         """
+
 
     finally:
 

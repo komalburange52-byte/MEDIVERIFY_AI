@@ -205,45 +205,97 @@
 
     <div class="search-box">
 
-        <form action="/search" method="GET">
+       <form action="/search" method="GET">
 
-            <div class="search-grid">
+    <div class="search-grid">
 
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="Doctor name"
-                    value="{{ name }}"
-                >
+        <input
+            type="text"
+            name="name"
+            placeholder="Doctor name"
+            value="{{ name }}"
+        >
 
-                <input
-                    type="text"
-                    name="registration_number"
-                    placeholder="Registration number"
-                    value="{{ registration_number }}"
-                >
+        <input
+            type="text"
+            name="registration_number"
+            placeholder="Registration number"
+            value="{{ registration_number }}"
+        >
 
-                <input
-                    type="text"
-                    name="specialization"
-                    placeholder="Specialization"
-                    value="{{ specialization }}"
-                >
+        <input
+            type="text"
+            name="specialization"
+            placeholder="Specialization"
+            value="{{ specialization }}"
+        >
 
-                <input
-                    type="text"
-                    name="location"
-                    placeholder="Location"
-                    value="{{ location }}"
-                >
+        <input
+            type="text"
+            name="location"
+            placeholder="Location"
+            value="{{ location }}"
+        >
 
-            </div>
+        <select name="availability">
 
-            <button type="submit">
-                🔍 Search Doctors
-            </button>
+            <option value="">
+                Any Availability
+            </option>
 
-        </form>
+            <option
+                value="Available"
+                {% if availability == "Available" %}selected{% endif %}
+            >
+                Available
+            </option>
+
+            <option
+                value="Unavailable"
+                {% if availability == "Unavailable" %}selected{% endif %}
+            >
+                Unavailable
+            </option>
+
+        </select>
+
+
+        <select name="verification_status">
+
+            <option value="">
+                Any Verification Status
+            </option>
+
+            <option
+                value="VERIFIED"
+                {% if verification_status == "VERIFIED" %}selected{% endif %}
+            >
+                VERIFIED
+            </option>
+
+            <option
+                value="DATA NEEDS UPDATE"
+                {% if verification_status == "DATA NEEDS UPDATE" %}selected{% endif %}
+            >
+                DATA NEEDS UPDATE
+            </option>
+
+            <option
+                value="UNABLE TO VERIFY"
+                {% if verification_status == "UNABLE TO VERIFY" %}selected{% endif %}
+            >
+                UNABLE TO VERIFY
+            </option>
+
+        </select>
+
+    </div>
+
+    <button type="submit">
+        🔍 Search Doctors
+    </button>
+
+</form>
 
     </div>
 

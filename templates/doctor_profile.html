@@ -122,14 +122,87 @@
             border-left: 4px solid #1266a8;
             line-height: 1.6;
         }
+        .recommendations {
+    margin-top: 30px;
+}
 
-        @media (max-width: 650px) {
+.recommendations h2 {
+    color: #123b56;
+    margin-bottom: 8px;
+}
 
-            .info {
-                grid-template-columns: 1fr;
-            }
+.recommendation-intro {
+    color: #687482;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
 
-        }
+.recommendation-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.recommendation-card {
+    background: #f7fafc;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #e1e8ee;
+}
+
+.recommendation-card h3 {
+    color: #123b56;
+    margin-bottom: 8px;
+}
+
+.verified-badge {
+    display: inline-block;
+    background: #e4f7ec;
+    color: #168044;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.recommendation-card p {
+    margin-bottom: 9px;
+    line-height: 1.5;
+}
+
+.score {
+    color: #1266a8;
+    font-weight: bold;
+    margin-top: 12px;
+}
+
+.view-button {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 9px 15px;
+    background: #1266a8;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+.view-button:hover {
+    background: #0d4f82;
+}
+
+       @media (max-width: 650px) {
+
+    .info {
+        grid-template-columns: 1fr;
+    }
+
+    .recommendation-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
 
     </style>
 
@@ -302,15 +375,83 @@
 
         <div class="notice">
 
-            <strong>Important:</strong>
+    <strong>Important:</strong>
 
-            MEDIVERIFY AI displays verification information
-            based on records available to the application.
-            This prototype does not legally determine whether
-            a person is a genuine or fake doctor.
+    MEDIVERIFY AI displays verification information
+    based on records available to the application.
+    This prototype does not legally determine whether
+    a person is a genuine or fake doctor.
+
+</div>
+
+
+{% if recommendations %}
+
+<div class="recommendations">
+
+    <h2>🤖 Recommended Doctors</h2>
+
+    <p class="recommendation-intro">
+        AI-assisted recommendations based on specialization,
+        location, and availability.
+    </p>
+
+
+    <div class="recommendation-grid">
+
+        {% for recommended_doctor in recommendations %}
+
+        <div class="recommendation-card">
+
+            <h3>
+                {{ recommended_doctor.doctor_name }}
+            </h3>
+
+            <span class="verified-badge">
+                ✓ VERIFIED
+            </span>
+
+            <p>
+                <strong>Specialization:</strong>
+                {{ recommended_doctor.specialization }}
+            </p>
+
+            <p>
+                <strong>Location:</strong>
+                {{ recommended_doctor.location }}
+            </p>
+
+            <p>
+                <strong>Qualification:</strong>
+                {{ recommended_doctor.qualification }}
+            </p>
+
+            <p>
+                <strong>Availability:</strong>
+                {{ recommended_doctor.availability }}
+            </p>
+
+            <p class="score">
+                Recommendation Score:
+                {{ recommended_doctor.recommendation_score }}/100
+            </p>
+
+            <a
+                href="/doctor/{{ recommended_doctor.id }}"
+                class="view-button"
+            >
+                View Profile
+            </a>
 
         </div>
 
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endif %}
     </div>
 
 </div>
